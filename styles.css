@@ -1,0 +1,262 @@
+/* Hallmark · shape: Narrative Workflow · genre: editorial · theme: Almanac (deal 2/3, seed marca-para-desuvida-mezcal-7ae0·a7a34b0c·2026-11-06·r0) · brand: Desuvida (spec 2026-11-06, brandbook) · job: buy · draw: c7dbe3 · redesign: full (2026-11-08, cartel editorial y movimiento)
+ * hero: full-viewport sage field (Hendrik 2026-11-08, topic 180: #ccd5ae, the client wordmark full width, glyphs staggered, 2-3 floating images with parallax and 3rem corners, two columns and origin labels at the foot) · nav: floating pill · footer: letter close with the logotipo across the measure · imagery: client mockups 5 (MAQUETAS) + one cut-out, natural · signature: the bottle standing inside the wordmark; the label as a ruled sheet in its stepped olive and peach frame
+ * axes: light/wide-grotesk/brand-red field · posture: full palette (field red, sign magenta, seal cyan, sheet peach and olive, ink navy) · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H5 E4 S5 R4 V4 · weakest: E, the bottle cut-out comes from a 1024px render, soft on 2x screens until the client sends a real photograph */
+/* waive 46a-slots (craft § 8 two-slot limit): the brief (ENCARGO.md) asks for labelled placeholders for WhatsApp, phone, address, hours and social links, plus one on the colour range; all listed in REPORTE.md */
+/* waive craft § 5 parallax: the brief (topic 180) asks for floating images with scroll parallax, the bottle leaving upwards and the wordmark letters hiding up and down on scroll; it stays inside the hero, translate only, passive scroll with one rAF write, at every width, off under reduced motion and without JS, never on body text */
+/* waive craft § 5 scroll-scrubbed motion (2026-11-08, ENCARGO in ~/.cache/desuvida-encargo.md): two pinned stages (El nombre wipe, El mezcal rows), per-word reveals and a page rail; all driven by one passive rAF handler, set only when the script adds html.motion, so no-JS and reduced motion get the static page */
+/* waive brand lock (topic 180, Hendrik 2026-11-08): the hero alone uses sage #ccd5ae and 3rem image corners (Anton was dropped for the client wordmark the same day); every other section keeps the brandbook palette, fonts and square corners */
+/* answered draw-swap: Poster keeps its posture as a full-bleed brand canvas, not a photograph; the cut-out sits on the red it was shot against (coral glass), so it is used on the red field only */
+/* Hallmark · waive 59 · the hero meets the franja band with no gap, the bottle stands on the band · the finish review asked for the bottle base to read as a frame edge, every other seam is 216px or more */
+/* Hallmark · reworded "Espadín joven de San Dionisio Ocotepec" to "Mezcal espadín joven de San Dionisio Ocotepec" · finish review: the first screen lost "mezcal artesanal" with the logotipo; "mezcal" comes off the label */
+/* Hallmark · reworded "maqueta-30.jpg" to "botella-30.webp" · the same client render cut out along its symmetric silhouette for the layered wordmark */
+@import url("./tokens.css");
+@import url("./base.css");
+
+@font-face { font-family: "Lexend Tera"; src: url("fonts/lexend-tera-latin.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Dokdo"; src: url("fonts/dokdo-latin.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+
+:root { --nav-h: 64px; }
+body { color: var(--color-ink-2); }
+h1, h2, h3 { color: var(--color-ink); }
+h1 { font-size: clamp(2.125rem, 2.9vw + 0.6rem, 3.5rem); line-height: 1.04; max-width: 16ch; }
+h2 { line-height: 1.08; }
+
+/* the skip link */
+.skip { position: absolute; left: var(--space-md); top: calc(-1 * var(--space-3xl)); z-index: var(--z-toast); padding: var(--space-xs) var(--space-md); background: var(--color-ink); color: var(--color-paper); }
+.skip:focus-visible { top: var(--space-md); }
+
+/* the brand marks: the client's PNGs used as masks so every colour stays a token */
+.mark { display: block; margin: 0; background-color: currentColor; -webkit-mask: var(--mark) center / contain no-repeat; mask: var(--mark) center / contain no-repeat; }
+.mark--dsva { --mark: url("img/logo/dsva.png"); width: 76px; aspect-ratio: 379 / 104; }
+.mark--logotipo { --mark: url("img/logo/logotipo.png"); width: min(100%, 30rem); aspect-ratio: 2415 / 663; }
+.mark--isotipo { --mark: url("img/logo/isotipo.png"); aspect-ratio: 368 / 630; }
+.mark--franja { --mark: url("img/logo/franja.png"); aspect-ratio: 1630 / 272; }
+.sign--quiote { --mark: url("img/logo/flor-quiote.png"); aspect-ratio: 437 / 463; }
+.sign--lateral { --mark: url("img/logo/agave-lateral.png"); aspect-ratio: 753 / 422; }
+.sign--superior { --mark: url("img/logo/agave-superior.png"); aspect-ratio: 698 / 697; }
+.sign--flor { --mark: url("img/logo/flor.png"); aspect-ratio: 489 / 549; }
+
+/* controls */
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 var(--space-lg); border: var(--rule-hair) solid var(--color-ink); border-radius: var(--radius-pill); background: transparent; color: var(--color-ink); font: 700 1.1875rem/1 var(--font-body); white-space: nowrap; text-decoration: none; cursor: pointer; transition: background-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out); }
+.btn:hover { background: var(--color-paper-2); }
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.btn[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; transform: none; }
+.btn--primary { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-paper); }
+.btn--primary:hover { background: var(--color-ink-2); }
+.actions { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+
+/* nav: a floating bar on paper over the red canvas */
+.nav { position: fixed; inset: var(--space-md) 0 auto; z-index: var(--z-sticky-nav); pointer-events: none; }
+.nav__bar { display: flex; align-items: center; gap: var(--space-xl); min-height: var(--nav-h); padding: 0 var(--space-xs) 0 var(--space-lg); background: var(--color-paper); border-radius: var(--radius-pill); pointer-events: auto; }
+.nav__home { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-ink); }
+.nav__home:focus-visible, .nav__links a:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.nav__links { display: flex; gap: var(--space-lg); margin: 0 0 0 auto; padding: 0; list-style: none; }
+.nav__links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-ink); font-size: var(--text-md); text-decoration: none; transition: color var(--dur-short) var(--ease-out); }
+.nav__links a:hover { color: var(--color-accent); text-decoration: underline; text-decoration-color: var(--color-accent); }
+.nav__action { min-height: 48px; font-size: var(--text-md); }
+
+/* hero (Hendrik, 2026-11-08, topic 180): full viewport on sage #ccd5ae; the client wordmark across the hero, its glyphs rising one by one; three client images float around it with parallax and 3rem corners; two columns and the origin labels at the foot */
+/* geometry in units of the hero width (cqi): wordmark width, height and left edge, the bottle centred on the gap after the U (54.5% of the wordmark), and the container's content edge for the foot columns */
+.hero { --ww: min(100cqi - 2 * var(--space-md), 1800px); --wh: calc(var(--ww) * 255 / 1599); --wl: calc((100cqi - var(--ww)) / 2); --bh: min(34cqi, 62svh); --bw: calc(var(--bh) * 200 / 876); --bx: calc(var(--wl) + var(--ww) * 0.545); --cl: calc((100cqi - min(100cqi, var(--container))) / 2 + var(--gutter));
+  container-type: inline-size; --color-focus: var(--color-ink); position: relative; display: grid; grid-template-rows: minmax(0, 1fr) auto; min-height: 100svh; padding-block: calc(var(--nav-h) + var(--space-xl)) var(--space-xl); background: var(--color-hero); color: var(--color-ink); overflow: clip; }
+/* the client wordmark (img/logo/wordmark.png, 1599:255) across the whole hero, 16px from each edge */
+.hero__word { --pt: var(--space-2xl); position: relative; z-index: 2; align-self: center; justify-self: center; width: var(--ww); margin: 0; padding-block: var(--pt) var(--space-2xl); color: var(--color-ink); }
+/* the PNG cut into its eight glyphs at the gaps between letters; each slides up inside the clipped box, 50ms after the one before */
+.hero__letters { position: relative; display: block; aspect-ratio: 1599 / 255; overflow: clip; }
+/* on scroll the letters slide out of the clipped box, alternately up and down, each a touch ahead of the one before; --hp is 0 at the top, so the page opens with the logo whole */
+.hero__glyph { --mark: url("img/logo/wordmark.png"); position: absolute; inset: 0; clip-path: var(--cut); translate: 0 calc(var(--dir) * min(1, var(--hp, 0) * (1 + var(--g) * 0.06)) * 105%); animation: letter-in 1.2s var(--ease-out) calc(var(--g) * 50ms) both; }
+/* the bottle cut-out (maqueta 30) stands in the gap after the U, its neck above the letters; the V is drawn again in front of it, as in the brandbook cover; it rises with the floating bottle on scroll */
+.hero__bottle { --rise: clamp(40px, 6vw, 100px); position: absolute; z-index: 1; top: calc(var(--pt) - var(--bh) * 0.14); left: calc(var(--ww) * 0.545 - var(--bw) / 2); width: var(--bw); margin: 0; translate: 0 calc(var(--shift, 0) * -0.6px); animation: rise-in 1.2s var(--ease-out) calc(var(--g) * 50ms) both; }
+.hero__bottle > img { width: 100%; height: auto; }
+.hero__letters--front { position: absolute; z-index: 2; top: var(--pt); left: 0; width: 100%; }
+.hero__float { --rise: clamp(40px, 6vw, 100px); position: absolute; z-index: 1; margin: 0; overflow: hidden; border-radius: 3rem; translate: 0 calc(var(--shift, 0) * var(--depth) * 1px); animation: rise-in 1.2s var(--ease-out) calc(var(--g) * 50ms) both; }
+.hero__float > img { width: 100%; height: 100%; object-fit: cover; }
+.hero__float--agave { top: calc(var(--nav-h) + var(--space-2xl)); left: 5vw; width: clamp(112px, 15vw, 260px); aspect-ratio: 4 / 5; }
+.hero__float--agave > img { object-position: 50% 70%; }
+.hero__float--bottle { top: calc(var(--nav-h) + var(--space-xl)); right: 6vw; width: clamp(120px, 16vw, 280px); aspect-ratio: 3 / 4; }
+/* the third image hangs from the lower half of the wordmark (cqi = the wordmark width), tucked behind it */
+.hero__float--fruit { z-index: -1; top: calc(var(--pt) + var(--wh) * 0.55); left: 28%; width: clamp(96px, 11vw, 200px); aspect-ratio: 1; }
+/* the orange and berries at the lower right of maqueta 35 */
+.hero__float--fruit > img { transform: scale(2.4); transform-origin: 91% 100%; }
+/* the two foot columns open around the bottle: the first ends a gap before it, the second starts a gap after it */
+.hero__foot { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, calc(var(--bx) - var(--bw) / 2 - var(--cl) - var(--space-xl))) minmax(0, 1fr); gap: var(--space-lg) calc(var(--bw) + var(--space-xl) * 2); align-items: end; }
+.hero h1 { font-size: clamp(1.75rem, 2vw + 0.75rem, 3rem); max-width: 16ch; }
+.hero__side { display: grid; gap: var(--space-lg); align-content: end; justify-items: start; }
+.hero__labels { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-2xl); margin: 0; padding-top: var(--space-md); border-top: var(--rule-hair) solid var(--color-ink); font-size: var(--text-md); }
+.hero__labels > div { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+.hero__labels dt { font-weight: 700; }
+.hero__labels dd { margin: 0; }
+.lead--voice { font-family: var(--font-outlier); font-size: clamp(1.625rem, 1.2vw + 1.1rem, 2.25rem); line-height: 1.15; max-width: 22ch; }
+.hero h1 { animation: rise 900ms var(--ease-out) 300ms both; }
+.hero__side > * { animation: rise 900ms var(--ease-out) 380ms both; }
+.hero__side > * + * { animation-delay: 460ms; }
+@keyframes rise { from { transform: translateY(18px); } }
+@keyframes rise-in { from { opacity: 0; transform: translateY(var(--rise)); } }
+@keyframes letter-in { from { transform: translateY(105%); } }
+.photo { margin: 0; border-radius: var(--radius-card); }
+.photo > img { outline: var(--rule-hair) solid color-mix(in oklab, var(--color-ink) 10%, transparent); outline-offset: -1px; }
+
+/* shared section rhythm: varied gaps, one rung per seam */
+.name { padding-block: var(--section-gap) var(--space-3xl); }
+.label { padding-block: var(--section-gap-s) var(--section-gap); }
+.signs { padding-block: var(--section-gap-s); background: var(--color-paper-2); }
+.colors { padding-block: var(--section-gap-l) var(--section-gap-s); }
+.orders { padding-block: var(--section-gap-s) var(--section-gap); border-top: var(--rule-bar) solid var(--color-rule-2); }
+.lead { color: var(--color-ink-2); }
+.caption { margin-top: var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); }
+.head-stack { display: grid; gap: var(--space-md); margin-bottom: var(--space-2xl); }
+.section-head { margin-bottom: var(--space-2xl); }
+
+/* the name: a statement under the franja, the pattern run edge to edge */
+.name { padding-top: 0; }
+.name__band { display: block; height: clamp(40px, 4vw, 64px); margin-bottom: var(--section-gap-s); background-color: var(--color-sign); -webkit-mask: url("img/logo/franja.png") left center / auto 100% repeat-x; mask: url("img/logo/franja.png") left center / auto 100% repeat-x; }
+/* the name stage: the headline over maqueta 28; with motion the photo wipes up from the bottom behind it while the stage is pinned */
+.name__pin { display: grid; gap: var(--space-2xl); margin-bottom: var(--space-2xl); }
+.name__photo { aspect-ratio: 3 / 2; overflow: hidden; }
+.name__photo > img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+.name__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap-columns); row-gap: var(--space-2xl); }
+.name__head { max-width: 16ch; font-size: clamp(2.5rem, 5vw + 0.5rem, 5.75rem); line-height: 1; }
+.name__p { font-size: var(--text-xl); line-height: 1.5; max-width: 30ch; }
+.name__p--1 { grid-column: 3 / span 4; }
+.name__p--2 { grid-column: 8 / span 4; }
+
+/* the label: the signature, a ruled sheet in the stepped frame of the bottle label */
+.label__grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: var(--space-3xl); align-items: center; }
+.label__text { display: grid; gap: var(--space-xl); }
+.sheet { --step: var(--space-lg); padding: calc(var(--step) * 2 + var(--space-md)) var(--space-xl) var(--space-xl); background: var(--color-sheet); color: var(--color-ink); clip-path: polygon(0 calc(var(--step) * 2), var(--step) calc(var(--step) * 2), var(--step) var(--step), calc(var(--step) * 2) var(--step), calc(var(--step) * 2) 0, calc(100% - var(--step) * 2) 0, calc(100% - var(--step) * 2) var(--step), calc(100% - var(--step)) var(--step), calc(100% - var(--step)) calc(var(--step) * 2), 100% calc(var(--step) * 2), 100% 100%, 0 100%); }
+.sheet__head { padding-bottom: var(--space-sm); border-bottom: var(--rule-bar) solid var(--color-sheet-rule); font-family: var(--font-display); font-weight: 600; font-size: var(--text-md); letter-spacing: -0.02em; color: var(--color-ink); }
+.sheet__rows { margin: 0; }
+.sheet__rows > div { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: var(--space-md); padding-block: var(--space-md); border-bottom: var(--rule-hair) solid var(--color-sheet-rule); }
+.sheet__rows dt { font-weight: 700; font-size: var(--text-md); }
+.sheet__rows dd { margin: 0; font-size: var(--text-lead); line-height: 1.35; }
+.sheet__foot { margin-top: var(--space-md); font-size: var(--text-sm); color: var(--color-ink); }
+.label__figure { margin: 0; }
+.label__photo { aspect-ratio: 4 / 5; min-height: 440px; }
+.label__photo > img { scale: calc(1.08 - var(--p, 1) * 0.08); }
+
+/* the signs: the brand's own icons as a frieze on the night blue */
+.signs { --color-focus: var(--color-paper); padding-block: var(--section-gap-s); background: var(--color-ink); color: var(--color-paper); }
+.signs .section-head { color: var(--color-paper); }
+.signs__row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-2xl) var(--space-xl); margin: 0; padding: 0; list-style: none; }
+.signs__row li { display: grid; gap: var(--space-lg); justify-items: start; }
+.signs__row .mark { width: auto; max-width: 100%; }
+.signs__row .sign--quiote { height: 200px; color: var(--color-sign); }
+.signs__row .sign--lateral { height: 150px; color: var(--color-seal); }
+.signs__row .sign--superior { height: 260px; color: var(--color-sign); }
+.signs__row .sign--flor { height: 180px; color: var(--color-seal); }
+.signs__name { padding-top: var(--space-sm); border-top: var(--rule-hair) solid color-mix(in oklab, var(--color-paper) 40%, transparent); font-size: var(--text-md); color: var(--color-paper); min-width: 9rem; }
+
+/* the colours: three label sets hung as a poster wall, one large and two stepped */
+/* the colours: a sticky content switch; the heading column stays pinned while the three label sets pass on the right, and the name under the heading follows the set at the centre of the viewport */
+.colors__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: var(--space-3xl); }
+.colors__aside { position: sticky; top: calc(var(--nav-h) + var(--space-md) + var(--space-2xl)); align-self: start; display: grid; gap: var(--space-md); }
+.colors__now { display: none; gap: var(--space-xs); margin-top: var(--space-xl); padding-top: var(--space-md); border-top: var(--rule-bar) solid var(--color-rule-2); }
+.colors.is-live .colors__now { display: grid; }
+.colors__count { font-size: var(--text-sm); color: var(--color-muted); }
+.colors__name { font-family: var(--font-display); font-weight: var(--display-weight); font-size: var(--text-2xl); line-height: 1.15; letter-spacing: var(--tracking-display); color: var(--color-ink); }
+.colors__set { display: grid; gap: var(--space-4xl); margin: 0; padding: 0; list-style: none; }
+.colors__set > li { width: min(100%, 72svh); }
+.colors__set > :nth-child(2) { justify-self: end; width: min(84%, 64svh); }
+/* the name beside the heading now carries each caption; the captions stay in the page for screen readers */
+.colors.is-live .colors__caption { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.colors__photo { aspect-ratio: 1 / 1; }
+
+/* orders: the contact facts on durazno beside the isotipo in olivo, the colours of the label */
+.orders { --color-rule: color-mix(in oklab, var(--color-sheet-rule) 45%, transparent); --color-rule-2: var(--color-sheet-rule); background: var(--color-sheet); color: var(--color-ink); border-top: 0; }
+.orders .lead { color: var(--color-ink); }
+.orders__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-3xl); align-items: center; }
+.orders__text { display: grid; gap: var(--space-lg); }
+.orders__rows { margin: var(--space-md) 0 0; border-top: var(--rule-bar) solid var(--color-rule-2); }
+.orders__rows > div { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 5fr); gap: var(--space-md); padding-block: var(--space-md); border-bottom: var(--rule-hair) solid var(--color-rule-2); }
+.orders__rows dt { font-weight: 700; color: var(--color-ink); }
+.orders__rows dd { margin: 0; font-size: var(--text-lead); }
+.orders__note { font-size: var(--text-sm); color: var(--color-ink); }
+.orders__mark { justify-self: center; height: 420px; width: auto; color: var(--color-sheet-rule); }
+.fill { padding: 0 0.25em; border: 1px dashed color-mix(in oklch, currentColor 60%, transparent); border-radius: 3px; color: inherit; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+
+/* footer: a letter close on the navy ink, the logotipo across the measure as the last word */
+.footer { --color-muted: var(--color-muted-on-ink); --color-focus: var(--color-paper); padding-block: var(--section-gap-s) var(--space-2xl); background: var(--color-ink); color: var(--color-paper); }
+.footer__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); }
+.footer__close { color: var(--color-paper); font-size: clamp(2rem, 2vw + 1.2rem, 3rem); max-width: 24ch; }
+.footer__links { display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-xl); margin: 0; padding: var(--space-lg) 0 0; border-top: var(--rule-hair) solid color-mix(in oklab, var(--color-paper) 30%, transparent); list-style: none; }
+.footer__links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-paper); }
+.footer__links a:hover { text-decoration-thickness: 2px; }
+.footer__links li { display: inline-flex; align-items: center; gap: var(--space-xs); }
+.footer__mark { width: 100%; margin-top: var(--space-xl); color: var(--color-paper); }
+.footer__legal { font-size: var(--text-sm); color: var(--color-muted); }
+
+/* the reveal: set only by the script on what starts below the fold, so the page is whole without it */
+[data-reveal] { transition: opacity var(--dur-long) var(--ease-out), transform 700ms var(--ease-out); transition-delay: calc(var(--i, 0) * 70ms); }
+.is-pending { opacity: 0; transform: translateY(16px); }
+/* split lines: the words rise 0.4em one after another, the line itself stays put */
+.w { display: inline-block; transition: opacity var(--dur-long) var(--ease-out), transform 700ms var(--ease-out); transition-delay: calc(var(--w) * 38ms); }
+.is-split.is-pending { opacity: 1; transform: none; }
+.is-split.is-pending .w { opacity: 0; transform: translateY(0.4em); }
+
+/* the page rail: brand magenta, scaled by reading progress */
+.rail { position: fixed; inset: 0 0 auto; z-index: calc(var(--z-sticky-nav) + 1); height: 3px; background: var(--color-sign); transform-origin: 0 50%; transform: scaleX(var(--page, 0)); pointer-events: none; }
+html:not(.motion) .rail { display: none; }
+
+/* stage 1, El nombre: pinned for 260svh; maqueta 28 wipes up from the bottom edge, the headline inverts over it and fades as the wipe completes */
+.motion .name__stage { height: 260svh; }
+.motion .name__pin { position: sticky; top: 0; height: 100svh; margin: 0; place-items: center; isolation: isolate; background: var(--color-paper); }
+.motion .name__photo { position: absolute; inset: calc(var(--nav-h) + var(--space-xl)) var(--gutter) var(--space-xl); aspect-ratio: auto; clip-path: inset(calc(100% - var(--p, 0) * 100%) 0 0 0); }
+.motion .name__photo > img { scale: calc(1.08 - var(--p, 0) * 0.08); }
+.motion .name__head { position: relative; z-index: 1; margin-inline: auto; text-align: center; color: white; mix-blend-mode: difference; opacity: clamp(0, (1 - var(--p, 0)) * 4, 1); }
+
+/* stage 2, El mezcal: on tall wide screens the sheet and the poster are pinned; the label rows light one by one beside the poster as it settles */
+@media (min-width: 60.01rem) and (min-height: 46rem) {
+  .motion .label { height: 280svh; padding-block: 0; }
+  .motion .label__grid { position: sticky; top: 0; height: 100svh; padding-top: calc(var(--nav-h) + var(--space-lg)); align-content: center; }
+  .motion .label__photo { min-height: 0; max-height: calc(100svh - var(--nav-h) - 9rem); }
+  .motion .label .sheet__rows > div:not(.is-pending) { transition-delay: 0s; }
+  .motion .label .sheet__rows > div:not(.is-lit):not(.is-pending) { opacity: 0.28; }
+}
+
+@media (prefers-reduced-motion: reduce) { .is-pending { opacity: 1; transform: none; } .is-split.is-pending .w { opacity: 1; transform: none; } .hero__glyph, .hero__float, .hero__bottle, .hero h1, .hero__side > * { animation: none; translate: none; } }
+
+@media (max-width: 60rem) {
+  .nav__links { display: none; }
+  .nav__bar { justify-content: space-between; }
+  .hero { --bh: 50cqi; }
+  .hero__foot { grid-template-columns: minmax(0, 1fr); column-gap: 0; }
+  /* one column: the word keeps room below the letters for the body of the bottle */
+  .hero__word { padding-bottom: calc(var(--bh) * 0.86 - var(--wh) + var(--space-lg)); }
+  .hero h1 { font-size: clamp(1.75rem, 4vw + 0.75rem, 2.75rem); }
+}
+@media (max-width: 40rem) {
+  .nav__bar { padding-left: var(--space-md); }
+  .actions .btn { flex: 1 1 100%; }
+  .hero__side { justify-items: stretch; }
+  .hero { --bh: 66cqi; }
+  .hero__word { --pt: 44vw; }
+  .hero__float--agave { top: calc(var(--nav-h) + var(--space-xl)); left: var(--gutter); width: 30vw; }
+  .hero__float--bottle { right: var(--gutter); width: 30vw; }
+  .hero__float--fruit { top: calc(100% - 27vw); left: 0; width: 24vw; }
+}
+
+@media (max-width: 60rem) {
+  .label__grid, .orders__grid, .footer__grid { grid-template-columns: minmax(0, 1fr); }
+  .name__p--1, .name__p--2 { grid-column: 1 / -1; }
+  .signs__row { justify-content: flex-start; }
+  /* one column: the heading scrolls away and only the name sticks under the nav, on paper, while the images pass */
+  .colors__grid { display: block; }
+  .colors__aside { display: contents; }
+  .colors__aside .lead { margin-top: var(--space-md); }
+  .colors__now { position: sticky; top: calc(var(--nav-h) + var(--space-md) + var(--space-xs)); z-index: var(--z-raised); margin: var(--space-xl) 0 var(--space-xl); padding: var(--space-sm) 0; background: var(--color-paper); border-bottom: var(--rule-hair) solid var(--color-rule); }
+  .colors__set { gap: var(--space-2xl); }
+  .colors__set > li, .colors__set > :nth-child(2) { width: 100%; }
+  .orders__mark { height: 260px; justify-self: start; }
+}
+@media (max-width: 40rem) {
+  .sheet { --step: var(--space-md); padding-inline: var(--space-lg); }
+  .sheet__rows > div, .orders__rows > div { grid-template-columns: minmax(0, 1fr); gap: var(--space-2xs); }
+  .signs__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-xl) var(--space-md); }
+  .signs__row .sign--quiote { height: 120px; } .signs__row .sign--lateral { height: 84px; } .signs__row .sign--superior { height: 140px; } .signs__row .sign--flor { height: 104px; }
+  .signs__name { min-width: 0; align-self: stretch; }
+  .colors__name { font-size: var(--text-xl); }
+  .label__photo { min-height: 0; }
+  .name__photo { aspect-ratio: 4 / 5; }
+}
